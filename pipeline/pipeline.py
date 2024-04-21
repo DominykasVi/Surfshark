@@ -52,6 +52,7 @@ def configure_logging(logging_folder: str, year: int, state: int) -> None:
     try:
         logging_file = f'logs/{logging_folder}/run_{year}_{state}.log'
         check_and_create_folder(logging_file)
+        # Done because of paralel processing, because once basigConfig is set, it does not necessarily write to new file.
         for handler in logging.root.handlers:
             logging.root.removeHandler(handler)
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
@@ -61,23 +62,29 @@ def configure_logging(logging_folder: str, year: int, state: int) -> None:
 
 
 def run_pipeline(url: str, year: int, state: int, logging_folder: str):
+    # Start logging
     configure_logging(logging_folder, year, state)
     try:
+        # Get page html
         logging.info(f"Run {year}:{state} STARTED")
         html = fetch_html(url)
         logging.info(f"Successfully fetched data from {url}")
         if html:
+            # Parsing data from html
             data_object = parse_html(html)
             logging.info(f"HTML data parsed")
             for key in data_object.keys():
+                # Formatting the data (removing duplicate headers)
                 clean_data = transform_data(
                     data_object[key]['data'], data_object[key]['headers'])
                 df = pd.DataFrame(clean_data, columns=clean_data.keys())
                 logging.info(f"DataFrame created for {key}")
+                # Data frame manipulations
                 columns = list(clean_data.keys())
                 df = transform_numeric_types(df, columns)
                 df = handle_descriptors(df, columns[0])
                 logging.info(f"DataFrame columns transformed for {key}")
+                # Saving file
                 file_name = f"annual_report/{year}/{state}/{key.replace(' ', '_').lower()}"
                 logging.info(f"Starting file write for {key}")
                 save_to_parquet(df, file_name)
@@ -86,7 +93,7 @@ def run_pipeline(url: str, year: int, state: int, logging_folder: str):
     except Exception as e:
         logging.error(f"Run failed due to error {str(e)}")
 
-
+# Used just for paralel processing, splits arguments into separate objects
 def pipeline_wrapper(parameters):
     return run_pipeline(*parameters)
 

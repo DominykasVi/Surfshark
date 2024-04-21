@@ -37,7 +37,7 @@ def parse_table(table) -> List:
             if td.text not in ['Descriptors*', '', '\xa0']:
                 if descriptor == False:
                     row.append(td.text.strip())
-                # Means we found a descriptor before, no need to check
+                # Means we found a descriptor before, now we are dealing with descriptor data
                 elif extract_number(td.text).isnumeric():
                     # If it's a number make no modifications
                     row.append(td.text.strip())
@@ -63,9 +63,10 @@ def extract_number(value: str) -> str:
 
 def transform_data(data: List[List], headers: List[str]) -> Dict[str, List[str]]:
     results = {}
+    # here we initialize the proper keys, if they are duplicates, it will still be an empty list
     for header in headers:
         results[header] = []
-
+    # since duplicates map to the same key, the headers will not be duplicated
     for row in data:
         for i, value in enumerate(row):
             results[headers[i]].append(value)
