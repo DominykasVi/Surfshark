@@ -15,8 +15,8 @@ def parse_year_range(year_range: str) -> Tuple[int, int]:
             start_year = int(values[0])
             end_year = start_year + 1
         elif len(values) == 2:
-            start_year = values[0]
-            end_year = values[1]
+            start_year = int(values[0])
+            end_year = int(values[1])
             if start_year >= end_year:
                 raise argparse.ArgumentTypeError(
                     "Start year must be less than end year")
@@ -35,8 +35,8 @@ def parse_state_range(state_range: str) -> Tuple[int, int]:
             start_state = int(values[0])
             end_state = start_state + 1
         elif len(values) == 2:
-            start_state = values[0]
-            end_state = values[1]
+            start_state = int(values[0])
+            end_state = int(values[1])
             if start_state >= end_state:
                 raise argparse.ArgumentTypeError(
                     "Start state must be less than end state")

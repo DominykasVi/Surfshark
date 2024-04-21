@@ -2,6 +2,7 @@
 
 This code reads data from https://www.ic3.gov/Media/PDF/AnnualReport/2016State/StateReport.aspx#?s=1 and saves it into parquet files.
 To run the code, you can simply run the pipeline/pipeline.py file.
+
 The pipeline takes into two arguments, year_range and state_range. 
 To see the arguments you can use command line command python **pipeline/pipeline.py -h**
 
@@ -10,6 +11,8 @@ Example command line execution with arguments:
 **python pipeline/pipeline.py --year_range 2016-2020 --state_range 1-10**
 
 The default arguments are 2016-2021 and 1-58.
+You can also run it with 2016 and 1 to get only one specific report.
+
 The data is saved into annual_report folder, with stucture {year}/{state_number}/{table_name}.parquet
 # Logging
 The logs are created for each url (year/state) we query in the logs/{run_start}/run_{year}_{state}.log file. 
