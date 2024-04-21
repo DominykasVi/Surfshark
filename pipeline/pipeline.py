@@ -85,7 +85,7 @@ def run_pipeline(url: str, year: int, state: int, logging_folder: str):
                 df = handle_descriptors(df, columns[0])
                 logging.info(f"DataFrame columns transformed for {key}")
                 # Saving file
-                file_name = f"annual_report/{year}/{state}/{key.replace(' ', '_').lower()}"
+                file_name = f"annual_report/{year}/{state}/ic3__{key.replace(' ', '_').lower()}"
                 logging.info(f"Starting file write for {key}")
                 save_to_parquet(df, file_name)
                 logging.info(f"File saved at {file_name}")
